@@ -28,6 +28,23 @@ class Product(models.Model):
         default='giveaway'
     )
     tags = models.ManyToManyField(Tag, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    creator = models.ForeignKey(User, on_delete=models.CASCADE, related_name='products')
+    status = models.CharField(
+        max_length=20,
+        choices=[
+            ('available', 'Available'),
+            ('pending', 'Pending'),
+            ('completed', 'Completed')
+        ],
+        default='available'
+    )
+    views_count = models.PositiveIntegerField(default=0)
+    
+    def increment_views(self):
+        self.views_count += 1
+        self.save()
 
     def __str__(self):
         return self.name
